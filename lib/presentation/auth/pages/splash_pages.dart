@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:food_delivery_resto_app/presentation/auth/pages/login_pages.dart';
 import '../../../core/core.dart';
 class SplashPages extends StatefulWidget {
   const SplashPages({super.key});
@@ -11,6 +12,10 @@ class SplashPages extends StatefulWidget {
 class _SplashPagesState extends State<SplashPages> {
   @override
   Widget build(BuildContext context) {
+    Future.delayed(
+      const Duration(milliseconds: 3000),
+      () => context.pushReplacement(const LoginPage()),
+    );
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: Padding(
