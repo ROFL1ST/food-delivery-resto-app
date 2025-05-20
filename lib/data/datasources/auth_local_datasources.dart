@@ -1,10 +1,11 @@
-import 'package:food_delivery_resto_app/data/models/response/login_response_model.dart';
+
+import 'package:food_delivery_resto_app/data/models/response/auth_response_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthLocalDatasources {
-  Future<void> saveAuthData(LoginResponseModel loginResponseModel) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('auth_data', loginResponseModel.toJson() as String);
+   Future<void> saveAuthData(AuthResponseModel authResponseModel) async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setString('auth_data', authResponseModel.toJson());
   }
 
   Future<void> removeAuthData() async {
@@ -12,11 +13,11 @@ class AuthLocalDatasources {
     await prefs.remove('auth_data');
   }
 
-  Future<LoginResponseModel?> getAuthData() async {
+  Future<AuthResponseModel?> getAuthData() async {
     final prefs = await SharedPreferences.getInstance();
     final String? authData = prefs.getString('auth_data');
     if (authData != null) {
-      return LoginResponseModel.fromJson(authData as Map<String, dynamic>);
+      return AuthResponseModel.fromJson(authData);
     }
     return null;
   }

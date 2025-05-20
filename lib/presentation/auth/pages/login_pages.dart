@@ -2,7 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_resto_app/core/constants/colors.dart';
 import 'package:food_delivery_resto_app/core/core.dart';
+import 'package:food_delivery_resto_app/data/datasources/auth_local_datasources.dart';
+import 'package:food_delivery_resto_app/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/auth/pages/register_pages.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/home/main_page.dart';
+import '../../../core/core.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -92,7 +97,51 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         const SpaceHeight(33.0),
-                        Button.filled(onPressed: () {}, label: 'Sign In'),
+                        BlocConsumer<LoginBloc, LoginState>(
+                          listener: (context, state) {
+                            state.maybeWhen(
+                              orElse: () {},
+                              error: (message) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Email or Password is wrong"),
+                                    backgroundColor: AppColors.red,
+                                  ),
+                                );
+                              },
+                              success: (data) {
+                                AuthLocalDatasources().saveAuthData(data);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Login Berhasil'),
+                                    backgroundColor: AppColors.green,
+                                  ),
+                                );
+                                context.pushReplacement(const MainPage());
+                              },
+                            );
+                          },
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              orElse:
+                                  () => Button.filled(
+                                    onPressed: () {
+                                      context.read<LoginBloc>().add(
+                                        LoginEvent.login(
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                        ),
+                                      );
+                                    },
+                                    label: 'Sign In',
+                                  ),
+                              loading:
+                                  () => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                            );
+                          },
+                        ),
 
                         const SpaceHeight(16.0),
                         Center(

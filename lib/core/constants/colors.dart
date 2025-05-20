@@ -40,6 +40,9 @@ class AppColors {
   /// yellow = #F38D42
   static const Color yellow = Color(0xffF38D42);
 
+  /// green = #1AD598
+  static const Color green = Color(0xff1AD598);
+
   /// navPlaceholder = #CBD5E1
   static const Color navPlaceholder = Color(0xffCBD5E1);
 

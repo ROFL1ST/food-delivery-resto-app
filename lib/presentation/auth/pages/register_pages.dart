@@ -36,6 +36,13 @@ class _RegisterPageState extends State<RegisterPage> {
   String? restaurantAddress;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentPosition();
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
     phoneController.dispose();
@@ -231,7 +238,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         // TODO: implement listener
                         state.maybeWhen(
                           orElse: () {},
-                          success: (data) {
+                          registerSuccess: (data) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Register Success, please login'),

@@ -3,7 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:food_delivery_resto_app/core/constants/variables.dart';
 import 'package:food_delivery_resto_app/data/datasources/auth_local_datasources.dart';
 import 'package:food_delivery_resto_app/data/models/request/register_request_model.dart';
-import 'package:food_delivery_resto_app/data/models/response/login_response_model.dart';
+import 'package:food_delivery_resto_app/data/models/response/auth_response_model.dart';
+
 import 'package:food_delivery_resto_app/data/models/response/register_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -38,7 +39,7 @@ class AuthRemoteDataSource {
     }
   }
 
-  Future<Either<String, LoginResponseModel>> login(
+  Future<Either<String, AuthResponseModel>> login(
     String email,
     String password,
   ) async {
@@ -50,7 +51,7 @@ class AuthRemoteDataSource {
     var body = jsonEncode({'email': email, 'password': password});
     var response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      return Right(LoginResponseModel.fromJson(jsonDecode(response.body)));
+      return Right(AuthResponseModel.fromJson(response.body));
     } else {
       return Left(response.body);
     }
@@ -61,7 +62,7 @@ class AuthRemoteDataSource {
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${authData?.data.token}',
+      'Authorization': 'Bearer ${authData!.data!.token}',
     };
     var url = Uri.parse('${Variables.baseUrl}/logout');
     var response = await http.post(url, headers: headers);

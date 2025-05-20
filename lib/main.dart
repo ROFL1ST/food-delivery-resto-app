@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_resto_app/data/datasources/auth_remote_datasources.dart';
+import 'package:food_delivery_resto_app/presentation/auth/bloc/login/login_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/auth/bloc/logout/logout_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/auth/pages/splash_pages.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,8 +27,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => RegisterBloc(AuthRemoteDataSource()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => RegisterBloc(AuthRemoteDataSource())),
+        BlocProvider(create: (context) => LoginBloc(AuthRemoteDataSource())),
+        BlocProvider(create: (context) => LogoutBloc(AuthRemoteDataSource())),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
