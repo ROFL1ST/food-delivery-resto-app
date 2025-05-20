@@ -7,6 +7,7 @@ import 'package:food_delivery_resto_app/presentation/auth/bloc/login/login_bloc.
 import 'package:food_delivery_resto_app/presentation/auth/pages/register_pages.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/home/main_page.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import '../../../core/core.dart';
 
 class LoginPage extends StatefulWidget {
@@ -81,8 +82,9 @@ class _LoginPageState extends State<LoginPage> {
                           label: 'Email',
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
+                          
                           prefixIcon: const Icon(
-                            Icons.email,
+                            IconsaxPlusBold.sms,
                             color: AppColors.primary,
                           ),
                         ),
@@ -92,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                           label: 'Password',
                           obscureText: true,
                           prefixIcon: const Icon(
-                            Icons.key,
+                            IconsaxPlusBold.key,
                             color: AppColors.primary,
                           ),
                         ),
