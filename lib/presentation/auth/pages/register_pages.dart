@@ -231,13 +231,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         // TODO: implement listener
                         state.maybeWhen(
                           orElse: () {},
-                          registerSuccess: (data) {
+                          success: (data) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Register Success, please login'),
                               ),
                             );
-                            
+
                             context.pushReplacement(const LoginPage());
                           },
                           error: (message) {

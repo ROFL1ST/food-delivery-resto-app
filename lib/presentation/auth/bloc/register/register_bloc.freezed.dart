@@ -12,8 +12,7 @@ part of 'register_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$RegisterEvent {
@@ -21,42 +20,47 @@ mixin _$RegisterEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(RegisterRequestModel requestModel) register,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function(RegisterRequestModel requestModel)? register,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(RegisterRequestModel requestModel)? register,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_Register value) register,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_Register value)? register,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Register value)? register,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $RegisterEventCopyWith<$Res> {
   factory $RegisterEventCopyWith(
-    RegisterEvent value,
-    $Res Function(RegisterEvent) then,
-  ) = _$RegisterEventCopyWithImpl<$Res, RegisterEvent>;
+          RegisterEvent value, $Res Function(RegisterEvent) then) =
+      _$RegisterEventCopyWithImpl<$Res, RegisterEvent>;
 }
 
 /// @nodoc
@@ -68,17 +72,13 @@ class _$RegisterEventCopyWithImpl<$Res, $Val extends RegisterEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of RegisterEvent
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 abstract class _$$StartedImplCopyWith<$Res> {
   factory _$$StartedImplCopyWith(
-    _$StartedImpl value,
-    $Res Function(_$StartedImpl) then,
-  ) = __$$StartedImplCopyWithImpl<$Res>;
+          _$StartedImpl value, $Res Function(_$StartedImpl) then) =
+      __$$StartedImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -86,28 +86,18 @@ class __$$StartedImplCopyWithImpl<$Res>
     extends _$RegisterEventCopyWithImpl<$Res, _$StartedImpl>
     implements _$$StartedImplCopyWith<$Res> {
   __$$StartedImplCopyWithImpl(
-    _$StartedImpl _value,
-    $Res Function(_$StartedImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of RegisterEvent
-  /// with the given fields replaced by the non-null parameter values.
+      _$StartedImpl _value, $Res Function(_$StartedImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$StartedImpl with DiagnosticableTreeMixin implements _Started {
+class _$StartedImpl implements _Started {
   const _$StartedImpl();
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'RegisterEvent.started()';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'RegisterEvent.started'));
   }
 
   @override
@@ -189,9 +179,8 @@ abstract class _Started implements RegisterEvent {
 /// @nodoc
 abstract class _$$RegisterImplCopyWith<$Res> {
   factory _$$RegisterImplCopyWith(
-    _$RegisterImpl value,
-    $Res Function(_$RegisterImpl) then,
-  ) = __$$RegisterImplCopyWithImpl<$Res>;
+          _$RegisterImpl value, $Res Function(_$RegisterImpl) then) =
+      __$$RegisterImplCopyWithImpl<$Res>;
   @useResult
   $Res call({RegisterRequestModel requestModel});
 }
@@ -201,46 +190,34 @@ class __$$RegisterImplCopyWithImpl<$Res>
     extends _$RegisterEventCopyWithImpl<$Res, _$RegisterImpl>
     implements _$$RegisterImplCopyWith<$Res> {
   __$$RegisterImplCopyWithImpl(
-    _$RegisterImpl _value,
-    $Res Function(_$RegisterImpl) _then,
-  ) : super(_value, _then);
+      _$RegisterImpl _value, $Res Function(_$RegisterImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of RegisterEvent
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? requestModel = null}) {
-    return _then(
-      _$RegisterImpl(
-        requestModel:
-            null == requestModel
-                ? _value.requestModel
-                : requestModel // ignore: cast_nullable_to_non_nullable
-                    as RegisterRequestModel,
-      ),
-    );
+  $Res call({
+    Object? requestModel = null,
+  }) {
+    return _then(_$RegisterImpl(
+      requestModel: null == requestModel
+          ? _value.requestModel
+          : requestModel // ignore: cast_nullable_to_non_nullable
+              as RegisterRequestModel,
+    ));
   }
 }
 
 /// @nodoc
 
-class _$RegisterImpl with DiagnosticableTreeMixin implements _Register {
+class _$RegisterImpl implements _Register {
   const _$RegisterImpl({required this.requestModel});
 
   @override
   final RegisterRequestModel requestModel;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'RegisterEvent.register(requestModel: $requestModel)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'RegisterEvent.register'))
-      ..add(DiagnosticsProperty('requestModel', requestModel));
   }
 
   @override
@@ -255,9 +232,7 @@ class _$RegisterImpl with DiagnosticableTreeMixin implements _Register {
   @override
   int get hashCode => Object.hash(runtimeType, requestModel);
 
-  /// Create a copy of RegisterEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RegisterImplCopyWith<_$RegisterImpl> get copyWith =>
@@ -331,10 +306,7 @@ abstract class _Register implements RegisterEvent {
       _$RegisterImpl;
 
   RegisterRequestModel get requestModel;
-
-  /// Create a copy of RegisterEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$RegisterImplCopyWith<_$RegisterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -346,56 +318,58 @@ mixin _$RegisterState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(RegisterResponseModel registerResponseModel)
-    registerSuccess,
-  }) => throw _privateConstructorUsedError;
+    required TResult Function(RegisterResponseModel response) success,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
-  }) => throw _privateConstructorUsedError;
+    TResult? Function(RegisterResponseModel response)? success,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult Function(RegisterResponseModel response)? success,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) registerSuccess,
-  }) => throw _privateConstructorUsedError;
+    required TResult Function(_Success value) success,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? registerSuccess,
-  }) => throw _privateConstructorUsedError;
+    TResult? Function(_Success value)? success,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? registerSuccess,
+    TResult Function(_Success value)? success,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $RegisterStateCopyWith<$Res> {
   factory $RegisterStateCopyWith(
-    RegisterState value,
-    $Res Function(RegisterState) then,
-  ) = _$RegisterStateCopyWithImpl<$Res, RegisterState>;
+          RegisterState value, $Res Function(RegisterState) then) =
+      _$RegisterStateCopyWithImpl<$Res, RegisterState>;
 }
 
 /// @nodoc
@@ -407,17 +381,13 @@ class _$RegisterStateCopyWithImpl<$Res, $Val extends RegisterState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 abstract class _$$InitialImplCopyWith<$Res> {
   factory _$$InitialImplCopyWith(
-    _$InitialImpl value,
-    $Res Function(_$InitialImpl) then,
-  ) = __$$InitialImplCopyWithImpl<$Res>;
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -425,28 +395,18 @@ class __$$InitialImplCopyWithImpl<$Res>
     extends _$RegisterStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
-    _$InitialImpl _value,
-    $Res Function(_$InitialImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
+class _$InitialImpl implements _Initial {
   const _$InitialImpl();
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'RegisterState.initial()';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'RegisterState.initial'));
   }
 
   @override
@@ -464,8 +424,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(RegisterResponseModel registerResponseModel)
-    registerSuccess,
+    required TResult Function(RegisterResponseModel response) success,
   }) {
     return initial();
   }
@@ -476,8 +435,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult? Function(RegisterResponseModel response)? success,
   }) {
     return initial?.call();
   }
@@ -488,8 +446,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult Function(RegisterResponseModel response)? success,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -504,7 +461,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) registerSuccess,
+    required TResult Function(_Success value) success,
   }) {
     return initial(this);
   }
@@ -515,7 +472,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? registerSuccess,
+    TResult? Function(_Success value)? success,
   }) {
     return initial?.call(this);
   }
@@ -526,7 +483,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? registerSuccess,
+    TResult Function(_Success value)? success,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -543,9 +500,8 @@ abstract class _Initial implements RegisterState {
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -553,28 +509,18 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$RegisterStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
+class _$LoadingImpl implements _Loading {
   const _$LoadingImpl();
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'RegisterState.loading()';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'RegisterState.loading'));
   }
 
   @override
@@ -592,8 +538,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(RegisterResponseModel registerResponseModel)
-    registerSuccess,
+    required TResult Function(RegisterResponseModel response) success,
   }) {
     return loading();
   }
@@ -604,8 +549,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult? Function(RegisterResponseModel response)? success,
   }) {
     return loading?.call();
   }
@@ -616,8 +560,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult Function(RegisterResponseModel response)? success,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -632,7 +575,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) registerSuccess,
+    required TResult Function(_Success value) success,
   }) {
     return loading(this);
   }
@@ -643,7 +586,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? registerSuccess,
+    TResult? Function(_Success value)? success,
   }) {
     return loading?.call(this);
   }
@@ -654,7 +597,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? registerSuccess,
+    TResult Function(_Success value)? success,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -671,9 +614,8 @@ abstract class _Loading implements RegisterState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
@@ -683,45 +625,34 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$RegisterStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                as String,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 
-class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
+class _$ErrorImpl implements _Error {
   const _$ErrorImpl(this.message);
 
   @override
   final String message;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'RegisterState.error(message: $message)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'RegisterState.error'))
-      ..add(DiagnosticsProperty('message', message));
   }
 
   @override
@@ -735,9 +666,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
@@ -749,8 +678,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(RegisterResponseModel registerResponseModel)
-    registerSuccess,
+    required TResult Function(RegisterResponseModel response) success,
   }) {
     return error(message);
   }
@@ -761,8 +689,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult? Function(RegisterResponseModel response)? success,
   }) {
     return error?.call(message);
   }
@@ -773,8 +700,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult Function(RegisterResponseModel response)? success,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -789,7 +715,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) registerSuccess,
+    required TResult Function(_Success value) success,
   }) {
     return error(this);
   }
@@ -800,7 +726,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? registerSuccess,
+    TResult? Function(_Success value)? success,
   }) {
     return error?.call(this);
   }
@@ -811,7 +737,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? registerSuccess,
+    TResult Function(_Success value)? success,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -825,10 +751,7 @@ abstract class _Error implements RegisterState {
   const factory _Error(final String message) = _$ErrorImpl;
 
   String get message;
-
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -836,11 +759,10 @@ abstract class _Error implements RegisterState {
 /// @nodoc
 abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
-    _$SuccessImpl value,
-    $Res Function(_$SuccessImpl) then,
-  ) = __$$SuccessImplCopyWithImpl<$Res>;
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({RegisterResponseModel registerResponseModel});
+  $Res call({RegisterResponseModel response});
 }
 
 /// @nodoc
@@ -848,47 +770,34 @@ class __$$SuccessImplCopyWithImpl<$Res>
     extends _$RegisterStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
-    _$SuccessImpl _value,
-    $Res Function(_$SuccessImpl) _then,
-  ) : super(_value, _then);
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? registerResponseModel = null}) {
-    return _then(
-      _$SuccessImpl(
-        null == registerResponseModel
-            ? _value.registerResponseModel
-            : registerResponseModel // ignore: cast_nullable_to_non_nullable
-                as RegisterResponseModel,
-      ),
-    );
+  $Res call({
+    Object? response = null,
+  }) {
+    return _then(_$SuccessImpl(
+      null == response
+          ? _value.response
+          : response // ignore: cast_nullable_to_non_nullable
+              as RegisterResponseModel,
+    ));
   }
 }
 
 /// @nodoc
 
-class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
-  const _$SuccessImpl(this.registerResponseModel);
+class _$SuccessImpl implements _Success {
+  const _$SuccessImpl(this.response);
 
   @override
-  final RegisterResponseModel registerResponseModel;
+  final RegisterResponseModel response;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'RegisterState.registerSuccess(registerResponseModel: $registerResponseModel)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'RegisterState.registerSuccess'))
-      ..add(
-        DiagnosticsProperty('registerResponseModel', registerResponseModel),
-      );
+  String toString() {
+    return 'RegisterState.success(response: $response)';
   }
 
   @override
@@ -896,16 +805,14 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SuccessImpl &&
-            (identical(other.registerResponseModel, registerResponseModel) ||
-                other.registerResponseModel == registerResponseModel));
+            (identical(other.response, response) ||
+                other.response == response));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, registerResponseModel);
+  int get hashCode => Object.hash(runtimeType, response);
 
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
@@ -917,10 +824,9 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(RegisterResponseModel registerResponseModel)
-    registerSuccess,
+    required TResult Function(RegisterResponseModel response) success,
   }) {
-    return registerSuccess(registerResponseModel);
+    return success(response);
   }
 
   @override
@@ -929,10 +835,9 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult? Function(RegisterResponseModel response)? success,
   }) {
-    return registerSuccess?.call(registerResponseModel);
+    return success?.call(response);
   }
 
   @override
@@ -941,12 +846,11 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(RegisterResponseModel registerResponseModel)?
-    registerSuccess,
+    TResult Function(RegisterResponseModel response)? success,
     required TResult orElse(),
   }) {
-    if (registerSuccess != null) {
-      return registerSuccess(registerResponseModel);
+    if (success != null) {
+      return success(response);
     }
     return orElse();
   }
@@ -957,9 +861,9 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) registerSuccess,
+    required TResult Function(_Success value) success,
   }) {
-    return registerSuccess(this);
+    return success(this);
   }
 
   @override
@@ -968,9 +872,9 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? registerSuccess,
+    TResult? Function(_Success value)? success,
   }) {
-    return registerSuccess?.call(this);
+    return success?.call(this);
   }
 
   @override
@@ -979,25 +883,21 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? registerSuccess,
+    TResult Function(_Success value)? success,
     required TResult orElse(),
   }) {
-    if (registerSuccess != null) {
-      return registerSuccess(this);
+    if (success != null) {
+      return success(this);
     }
     return orElse();
   }
 }
 
 abstract class _Success implements RegisterState {
-  const factory _Success(final RegisterResponseModel registerResponseModel) =
-      _$SuccessImpl;
+  const factory _Success(final RegisterResponseModel response) = _$SuccessImpl;
 
-  RegisterResponseModel get registerResponseModel;
-
-  /// Create a copy of RegisterState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  RegisterResponseModel get response;
+  @JsonKey(ignore: true)
   _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
