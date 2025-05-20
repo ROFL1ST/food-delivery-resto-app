@@ -17,7 +17,7 @@ class AuthRemoteDataSource {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-    var url = Uri.parse('${Variables.baseUrl}/restaurant/register');
+    var url = Uri.parse('${Variables.baseUrl}/api/restaurant/register');
     var request = http.MultipartRequest("POST", url);
     request.files.add(
       await http.MultipartFile.fromPath('photo', requestModel.photo!.path),
@@ -47,7 +47,7 @@ class AuthRemoteDataSource {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-    var url = Uri.parse('${Variables.baseUrl}/login');
+    var url = Uri.parse('${Variables.baseUrl}/api/login');
     var body = jsonEncode({'email': email, 'password': password});
     var response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
@@ -64,7 +64,7 @@ class AuthRemoteDataSource {
       'Accept': 'application/json',
       'Authorization': 'Bearer ${authData!.data!.token}',
     };
-    var url = Uri.parse('${Variables.baseUrl}/logout');
+    var url = Uri.parse('${Variables.baseUrl}/api/logout');
     var response = await http.post(url, headers: headers);
     if (response.statusCode == 200) {
       return Right('Logout Success');

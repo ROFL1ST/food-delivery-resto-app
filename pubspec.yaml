@@ -50,6 +50,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   shared_preferences: ^2.5.3
   iconsax_plus: ^1.0.0
+  salomon_bottom_bar: ^3.3.2
 
 dev_dependencies:
   freezed: ^2.5.2
