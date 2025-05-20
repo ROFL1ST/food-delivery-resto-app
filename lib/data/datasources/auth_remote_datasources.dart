@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:food_delivery_resto_app/core/constants/variables.dart';
 import 'package:food_delivery_resto_app/data/datasources/auth_local_datasources.dart';
 import 'package:food_delivery_resto_app/data/models/request/register_request_model.dart';
 import 'package:food_delivery_resto_app/data/models/response/login_response_model.dart';
@@ -8,12 +9,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AuthRemoteDataSource {
-  final baseUrl = dotenv.env['URL_DEV'] ?? '';
   Future<Either<String, RegisterResponseModel>> register(
     RegisterRequestModel requestModel,
   ) async {
-    final Map<String, String> headers = {'Content-Type': 'application/json'};
-    var url = Uri.parse('$baseUrl/restaurant/register');
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    var url = Uri.parse('${Variables.baseUrl}/restaurant/register');
     var request = http.MultipartRequest("POST", url);
     request.files.add(
       await http.MultipartFile.fromPath('photo', requestModel.photo!.path),
@@ -43,7 +46,7 @@ class AuthRemoteDataSource {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-    var url = Uri.parse('$baseUrl/login');
+    var url = Uri.parse('${Variables.baseUrl}/login');
     var body = jsonEncode({'email': email, 'password': password});
     var response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
@@ -58,9 +61,9 @@ class AuthRemoteDataSource {
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization' : 'Bearer ${authData?.data.token}',
+      'Authorization': 'Bearer ${authData?.data.token}',
     };
-    var url = Uri.parse('$baseUrl/logout');
+    var url = Uri.parse('${Variables.baseUrl}/logout');
     var response = await http.post(url, headers: headers);
     if (response.statusCode == 200) {
       return Right('Logout Success');
