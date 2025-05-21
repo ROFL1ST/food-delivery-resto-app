@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_resto_app/data/datasources/auth_remote_datasources.dart';
+import 'package:food_delivery_resto_app/data/datasources/order_remote_datasource.dart';
 import 'package:food_delivery_resto_app/data/datasources/product_remote_datasources.dart';
 import 'package:food_delivery_resto_app/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/auth/bloc/logout/logout_bloc.dart';
@@ -9,7 +10,10 @@ import 'package:food_delivery_resto_app/presentation/auth/bloc/register/register
 import 'package:food_delivery_resto_app/presentation/auth/pages/splash_pages.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/add_product/add_product_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/delete_product/delete_product_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/get_order/get_order_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/get_order_detail/get_order_detail_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_product/get_product_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/update_product/update_product_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -39,6 +43,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => GetProductBloc(ProductRemoteDatasources())),
         BlocProvider(create: (context) => AddProductBloc(ProductRemoteDatasources())),
         BlocProvider(create: (context) => DeleteProductBloc(ProductRemoteDatasources())),
+        BlocProvider(create: (context) => UpdateProductBloc(ProductRemoteDatasources())),
+        BlocProvider(create: (context) => GetOrderBloc(OrderRemoteDatasource())),
+        BlocProvider(create: (context) => GetOrderDetailBloc(OrderRemoteDatasource())),
         
       ],
       child: MaterialApp(

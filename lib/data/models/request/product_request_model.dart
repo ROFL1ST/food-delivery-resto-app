@@ -9,7 +9,7 @@ class ProductRequestModel {
   final int stock;
   final int isFavorite;
   final int isAvailable;
-  final XFile image;
+  final XFile? image;
   ProductRequestModel({
     required this.name,
     required this.description,
@@ -17,7 +17,7 @@ class ProductRequestModel {
     required this.stock,
     required this.isFavorite,
     required this.isAvailable,
-    required this.image,
+    this.image,
   });
 
   ProductRequestModel copyWith({

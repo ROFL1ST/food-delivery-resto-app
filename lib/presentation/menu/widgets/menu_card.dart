@@ -9,6 +9,8 @@ import 'package:food_delivery_resto_app/core/core.dart';
 import 'package:food_delivery_resto_app/data/models/response/product_response_modeld.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/delete_product/delete_product_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_product/get_product_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/widgets/form_edit_menu_bottom_sheet.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import '../models/menu_model.dart';
 import 'form_menu_bottom_sheet.dart';
 
@@ -115,23 +117,23 @@ class MenuCard extends StatelessWidget {
                         children: [
                           IconButton(
                             icon: const Icon(
-                              Icons.edit,
+                              IconsaxPlusBold.edit,
                               color: AppColors.primary,
                               size: 20,
                             ),
                             onPressed: () {
-                              // showModalBottomSheet(
-                              //   context: context,
-                              //   isScrollControlled: true,
-                              //   builder:
-                              //       (context) =>
-                              //           FormMenuBottomSheet(item: item),
-                              // );
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder:
+                                    (context) =>
+                                        FormEditMenuBottomSheet(item: item),
+                              );
                             },
                           ),
                           IconButton(
                             icon: const Icon(
-                              Icons.delete,
+                              IconsaxPlusBold.trash,
                               color: Colors.redAccent,
                               size: 20,
                             ),

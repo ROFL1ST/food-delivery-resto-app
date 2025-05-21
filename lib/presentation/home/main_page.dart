@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_resto_app/core/constants/colors.dart';
 import 'package:food_delivery_resto_app/presentation/menu/pages/menu_page.dart';
+import 'package:food_delivery_resto_app/presentation/menu/pages/order_page.dart';
 import 'package:food_delivery_resto_app/presentation/menu/pages/profile_page.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -18,7 +19,7 @@ class _MainPageState extends State<MainPage> {
   final _widgets = [
     const Text('Home Page'), // Placeholder for Home Page
     const MenuPage(),
-    const Text('Order Page'),
+    const OrderPage(),
     const ProfilePage(),
   ];
 

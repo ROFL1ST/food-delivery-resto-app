@@ -59,8 +59,8 @@ class ProductRemoteDatasources {
   Future<Either<String, String>> deleteProduct(int id) async {
     final authData = await AuthLocalDatasources().getAuthData();
     final header = {
-        "Authorization" : 'Bearer ${authData!.data?.token}',
-        "Accept" : 'application/json',
+      "Authorization": 'Bearer ${authData!.data?.token}',
+      "Accept": 'application/json',
     };
     final url = Uri.parse('${Variables.baseUrl}/api/products/$id');
     final response = await http.delete(url, headers: header);
@@ -68,6 +68,33 @@ class ProductRemoteDatasources {
       return const Right('Success');
     } else {
       return Left(response.body);
+    }
+  }
+
+  Future<Either<String, ProductResponseModel>> updateProduct(
+    int id,
+    ProductRequestModel data,
+  ) async {
+    final authData = await AuthLocalDatasources().getAuthData();
+    final header = {
+      'Authorization': 'Bearer ${authData!.data?.token}',
+      'Accept': 'application/json',
+    };
+    var url = Uri.parse('${Variables.baseUrl}/api/products/$id');
+    var request = http.MultipartRequest('POST', url);
+    request.fields.addAll(data.toMap());
+    if (data.image != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('image', data.image!.path),
+      );
+    }
+    request.headers.addAll(header);
+    http.StreamedResponse response = await request.send();
+    final String body = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      return Right(ProductResponseModel.fromJson(body));
+    } else {
+      return Left(body);
     }
   }
 }
