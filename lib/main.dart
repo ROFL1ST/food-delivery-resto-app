@@ -7,6 +7,8 @@ import 'package:food_delivery_resto_app/presentation/auth/bloc/login/login_bloc.
 import 'package:food_delivery_resto_app/presentation/auth/bloc/logout/logout_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/auth/pages/splash_pages.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/add_product/add_product_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/delete_product/delete_product_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_product/get_product_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => LoginBloc(AuthRemoteDataSource())),
         BlocProvider(create: (context) => LogoutBloc(AuthRemoteDataSource())),
         BlocProvider(create: (context) => GetProductBloc(ProductRemoteDatasources())),
+        BlocProvider(create: (context) => AddProductBloc(ProductRemoteDatasources())),
+        BlocProvider(create: (context) => DeleteProductBloc(ProductRemoteDatasources())),
         
       ],
       child: MaterialApp(

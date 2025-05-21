@@ -55,4 +55,19 @@ class ProductRemoteDatasources {
       return Left(response.body);
     }
   }
+
+  Future<Either<String, String>> deleteProduct(int id) async {
+    final authData = await AuthLocalDatasources().getAuthData();
+    final header = {
+        "Authorization" : 'Bearer ${authData!.data?.token}',
+        "Accept" : 'application/json',
+    };
+    final url = Uri.parse('${Variables.baseUrl}/api/products/$id');
+    final response = await http.delete(url, headers: header);
+    if (response.statusCode == 200) {
+      return const Right('Success');
+    } else {
+      return Left(response.body);
+    }
+  }
 }

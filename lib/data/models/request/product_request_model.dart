@@ -9,7 +9,7 @@ class ProductRequestModel {
   final int stock;
   final int isFavorite;
   final int isAvailable;
-  final XFile? image;
+  final XFile image;
   ProductRequestModel({
     required this.name,
     required this.description,
@@ -17,7 +17,7 @@ class ProductRequestModel {
     required this.stock,
     required this.isFavorite,
     required this.isAvailable,
-     this.image,
+    required this.image,
   });
 
   ProductRequestModel copyWith({
@@ -48,13 +48,10 @@ class ProductRequestModel {
       'stock': stock.toString(),
       'is_favorite': isFavorite.toString(),
       'is_available': isAvailable.toString(),
-    
     };
   }
 
-
   String toJson() => json.encode(toMap());
-
 
   @override
   String toString() {
@@ -64,25 +61,25 @@ class ProductRequestModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is ProductRequestModel &&
-      other.name == name &&
-      other.description == description &&
-      other.price == price &&
-      other.stock == stock &&
-      other.isFavorite == isFavorite &&
-      other.isAvailable == isAvailable &&
-      other.image == image;
+        other.name == name &&
+        other.description == description &&
+        other.price == price &&
+        other.stock == stock &&
+        other.isFavorite == isFavorite &&
+        other.isAvailable == isAvailable &&
+        other.image == image;
   }
 
   @override
   int get hashCode {
     return name.hashCode ^
-      description.hashCode ^
-      price.hashCode ^
-      stock.hashCode ^
-      isFavorite.hashCode ^
-      isAvailable.hashCode ^
-      image.hashCode;
+        description.hashCode ^
+        price.hashCode ^
+        stock.hashCode ^
+        isFavorite.hashCode ^
+        isAvailable.hashCode ^
+        image.hashCode;
   }
 }

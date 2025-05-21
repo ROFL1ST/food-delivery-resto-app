@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_resto_app/core/constants/colors.dart';
 import 'package:food_delivery_resto_app/core/constants/variables.dart';
 import 'package:food_delivery_resto_app/core/core.dart';
 import 'package:food_delivery_resto_app/data/models/response/product_response_modeld.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/delete_product/delete_product_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/get_product/get_product_bloc.dart';
 import '../models/menu_model.dart';
 import 'form_menu_bottom_sheet.dart';
 
@@ -13,6 +18,8 @@ class MenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Timer? timer;
+    print('${Variables.baseUrl}/uploads/products/${item.image}');
     return GestureDetector(
       onTap: () {
         // Aksi ketika kartu ditekan
@@ -51,15 +58,17 @@ class MenuCard extends StatelessWidget {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                     ),
-                errorWidget:
-                    (context, url, error) => Container(
-                      height: 120,
-                      color: AppColors.gray1,
-                      child: const Icon(
-                        Icons.broken_image,
-                        color: AppColors.gray2,
-                      ),
+                errorWidget: (context, url, error) {
+                  print('Error loading image: $error');
+                  return Container(
+                    height: 120,
+                    color: AppColors.gray1,
+                    child: const Icon(
+                      Icons.broken_image,
+                      color: AppColors.gray2,
                     ),
+                  );
+                },
               ),
             ),
             Padding(
@@ -80,15 +89,15 @@ class MenuCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   // Harga menu
-                  // Text(
-                  //   item.price!.currencyFormatRp,
-                  //   style: const TextStyle(
-                  //     fontSize: 14,
-                  //     fontWeight: FontWeight.w600,
-                  //     color: AppColors.primary,
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 8),
+                  Text(
+                    item.price!.toInt.currencyFormatRp,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   // Informasi stok dan aksi
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,8 +141,8 @@ class MenuCard extends StatelessWidget {
                                 builder:
                                     (context) => AlertDialog(
                                       title: const Text('Hapus Menu'),
-                                      content: const Text(
-                                        'Apakah Anda yakin ingin menghapus menu ini?',
+                                      content: Text(
+                                        'Apakah Anda yakin ingin menghapus menu "${item.name}"?',
                                       ),
                                       actions: [
                                         TextButton(
@@ -146,10 +155,28 @@ class MenuCard extends StatelessWidget {
                                             backgroundColor: Colors.redAccent,
                                           ),
                                           onPressed: () {
-                                            Navigator.pop(context);
+                                            context.read<DeleteProductBloc>().add(
+                                              DeleteProductEvent.deleteProduct(
+                                                id: item.id!,
+                                              ),
+                                            );
+                                            context.pop();
+                                            context.read<GetProductBloc>().add(
+                                              const GetProductEvent.getProducts(),
+                                            );
+                                            context.showDialogSuccess(
+                                              'Berhasil',
+                                              'Menu berhasil dihapus',
+                                            );
+
                                             // Logika hapus menu
                                           },
-                                          child: const Text('Hapus'),
+                                          child: const Text(
+                                            'Hapus',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),

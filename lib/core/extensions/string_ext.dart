@@ -20,4 +20,6 @@ extension StringExt on String {
         symbol: 'Rp. ',
         decimalDigits: 0,
       ).format(this);
+
+  int get toInt => int.parse(this);
 }

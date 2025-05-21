@@ -7,10 +7,12 @@ import '../assets/assets.dart';
 import '../constants/colors.dart';
 import 'buttons.dart';
 import 'spaces.dart';
+import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
 
 class CustomImagePicker extends StatefulWidget {
   final String label;
-  final void Function(String? imagePath) onChanged;
+  final void Function(XFile? imagePath) onChanged;
   final String? imageUrl;
   final bool showLabel;
   final double borderRadius;
@@ -35,10 +37,27 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      _image = image;
-      widget.onChanged(image?.path);
-    });
+    if (image != null) {
+      final File originalFile = File(image.path);
+      final img.Image? decodedImage = img.decodeImage(
+        originalFile.readAsBytesSync(),
+      );
+
+      if (decodedImage != null) {
+        
+        final img.Image resizedImage = img.copyResize(decodedImage, width: 800);
+
+      
+        final Directory tempDir = await getTemporaryDirectory();
+        final File jpegFile = File('${tempDir.path}/converted_image.jpeg')
+          ..writeAsBytesSync(img.encodeJpg(resizedImage, quality: 85));
+
+        setState(() {
+          _image = XFile(jpegFile.path);
+          widget.onChanged(_image);
+        });
+      }
+    }
   }
 
   @override
@@ -49,10 +68,7 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
         if (widget.showLabel) ...[
           Text(
             widget.label,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
           ),
           const SpaceHeight(12.0),
         ],
@@ -84,13 +100,15 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
                       width: 65.0,
                       height: 65.0,
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
+                        borderRadius: BorderRadius.circular(
+                          widget.borderRadius,
+                        ),
                         border: Border.all(color: AppColors.stroke),
                       ),
                       child: ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
+                        borderRadius: BorderRadius.circular(
+                          widget.borderRadius,
+                        ),
                         child: Image.file(
                           File(_image!.path),
                           fit: BoxFit.cover,
@@ -99,10 +117,11 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
                     ),
                     IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () => setState(() {
-                        _image = null;
-                        widget.onChanged(null);
-                      }),
+                      onPressed:
+                          () => setState(() {
+                            _image = null;
+                            widget.onChanged(null);
+                          }),
                       icon: const Icon(Icons.cancel),
                     ),
                   ],
@@ -112,14 +131,17 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
                   padding: const EdgeInsets.all(12.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
-                    child: widget.imageUrl != null
-                        ? CachedNetworkImage(
-                            imageUrl: widget.imageUrl!,
-                            height: 65.0,
-                            width: 65.0,
-                            fit: BoxFit.cover,
-                          )
-                        : Assets.images.imagePlaceholder.image(height: 65.0),
+                    child:
+                        widget.imageUrl != null
+                            ? CachedNetworkImage(
+                              imageUrl: widget.imageUrl!,
+                              height: 65.0,
+                              width: 65.0,
+                              fit: BoxFit.cover,
+                            )
+                            : Assets.images.imagePlaceholder.image(
+                              height: 65.0,
+                            ),
                   ),
                 ),
               ],
