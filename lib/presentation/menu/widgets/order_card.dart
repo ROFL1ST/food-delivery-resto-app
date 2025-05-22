@@ -56,7 +56,9 @@ class _OrderCardState extends State<OrderCard> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      widget.order.status?.toUpperCase() ?? 'N/A',
+                      widget.order.status == "ready_for_delivery"
+                          ? "READY FOR DELIVERY"
+                          : widget.order.status?.toUpperCase() ?? 'N/A',
                       style: TextStyle(
                         color: _getStatusColor(widget.order.status),
                         fontWeight: FontWeight.bold,

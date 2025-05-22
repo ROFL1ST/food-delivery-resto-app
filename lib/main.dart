@@ -13,6 +13,7 @@ import 'package:food_delivery_resto_app/presentation/menu/bloc/delete_product/de
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_order/get_order_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_order_detail/get_order_detail_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_product/get_product_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/update_order_status/update_oder_status_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/update_product/update_product_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => UpdateProductBloc(ProductRemoteDatasources())),
         BlocProvider(create: (context) => GetOrderBloc(OrderRemoteDatasource())),
         BlocProvider(create: (context) => GetOrderDetailBloc(OrderRemoteDatasource())),
+        BlocProvider(create: (context) => UpdateOderStatusBloc(OrderRemoteDatasource())),
         
       ],
       child: MaterialApp(

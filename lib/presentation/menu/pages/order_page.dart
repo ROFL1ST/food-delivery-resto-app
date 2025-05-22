@@ -63,6 +63,10 @@ class _OrderPageState extends State<OrderPage> {
                   const SizedBox(width: 8),
                   _buildFilterChip('processing'),
                   const SizedBox(width: 8),
+                  _buildFilterChip('prepared'),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('ready_for_delivery'),
+                  const SizedBox(width: 8),
                   _buildFilterChip('completed'),
                   const SizedBox(width: 8),
                   _buildFilterChip('canceled'),
@@ -74,13 +78,14 @@ class _OrderPageState extends State<OrderPage> {
       ),
       body: Stack(
         children: [
-          // Background layer
 
           // Content layer
           CustomRefreshIndicator(
             onRefresh: () async {
               // Implement your refresh logic here
-              log('Refresh triggered');
+              context.read<GetOrderBloc>().add(
+                GetOrderEvent.getOrder(status: _selectedFilter),
+              );
             },
             builder: (context, child, controller) {
               final double progressValue = controller.value.clamp(0.0, 1.0);
@@ -207,7 +212,9 @@ class _OrderPageState extends State<OrderPage> {
     bool isSelected = _selectedFilter == status;
     return ChoiceChip(
       label: Text(
-        status.toUpperCase(),
+        status == 'ready_for_delivery'
+            ? 'READY FOR DELIVERY'
+            : status.toUpperCase(),
         style: TextStyle(
           color: isSelected ? Colors.white : AppColors.primary,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,

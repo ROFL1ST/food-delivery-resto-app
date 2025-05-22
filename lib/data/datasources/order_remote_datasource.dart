@@ -41,5 +41,28 @@ class OrderRemoteDatasource {
     } else {
       return Left(response.body);
     }
-  } 
+  }
+
+  Future<Either<String, OrderResponseModel>> updateOrderStatus(int id, String status) async {
+    final authData = await AuthLocalDatasources().getAuthData();
+    final header = {
+      "Authorization" : 'Bearer ${authData!.data?.token}',
+      "Accept" : 'application/json',
+      "Content-Type" : 'application/json',
+    };
+    final url = Uri.parse('${Variables.baseUrl}/api/order/restaurant/update-status/$id');
+    final response = await http.put(
+      url,
+      headers: header,
+      body: jsonEncode({
+        "status": status,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final order = OrderResponseModel.fromJson(response.body);
+      return Right(order);
+    } else {
+      return Left(response.body);
+    }
+  }
 }
