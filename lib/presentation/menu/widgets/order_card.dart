@@ -58,6 +58,10 @@ class _OrderCardState extends State<OrderCard> {
                     child: Text(
                       widget.order.status == "ready_for_delivery"
                           ? "READY FOR DELIVERY"
+                          : widget.order.status == "accepted_by_driver"
+                          ? "ACCEPTED BY DRIVER"
+                          : widget.order.status == "on_the_way"
+                          ? "ON THE WAY"
                           : widget.order.status?.toUpperCase() ?? 'N/A',
                       style: TextStyle(
                         color: _getStatusColor(widget.order.status),
@@ -185,6 +189,14 @@ class _OrderCardState extends State<OrderCard> {
         return Colors.blue.shade700;
       case 'completed':
         return Colors.green.shade700;
+      case 'prepared':
+        return Colors.teal.shade700;
+      case 'ready_for_delivery':
+        return Colors.purple.shade700;
+      case 'accepted_by_driver':
+        return Colors.amber.shade700;
+      case 'on_the_way':
+        return Colors.blue.shade700;
       case 'canceled':
         return Colors.red.shade700;
       default:

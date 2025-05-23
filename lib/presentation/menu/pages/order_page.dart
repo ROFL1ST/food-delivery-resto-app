@@ -19,7 +19,7 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   final _controller = IndicatorController(refreshEnabled: true);
 
-  String _selectedFilter = 'pending';
+  String _selectedFilter = 'pending,processing,prepared,ready_for_delivery,accepted_by_driver,on_the_way,completed,canceled';
   @override
   void initState() {
     // TODO: implement initState
@@ -59,6 +59,8 @@ class _OrderPageState extends State<OrderPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  _buildFilterChip('pending,processing,prepared,ready_for_delivery,accepted_by_driver,on_the_way,completed,canceled'),
+                  const SizedBox(width: 8),
                   _buildFilterChip('pending'),
                   const SizedBox(width: 8),
                   _buildFilterChip('processing'),
@@ -66,6 +68,8 @@ class _OrderPageState extends State<OrderPage> {
                   _buildFilterChip('prepared'),
                   const SizedBox(width: 8),
                   _buildFilterChip('ready_for_delivery'),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('accepted_by_driver,on_the_way'),
                   const SizedBox(width: 8),
                   _buildFilterChip('completed'),
                   const SizedBox(width: 8),
@@ -78,7 +82,6 @@ class _OrderPageState extends State<OrderPage> {
       ),
       body: Stack(
         children: [
-
           // Content layer
           CustomRefreshIndicator(
             onRefresh: () async {
@@ -214,7 +217,11 @@ class _OrderPageState extends State<OrderPage> {
       label: Text(
         status == 'ready_for_delivery'
             ? 'READY FOR DELIVERY'
-            : status.toUpperCase(),
+            : status == 'accepted_by_driver,on_the_way'
+            ? 'WITH DRIVER'
+            : status == "pending,processing,prepared,ready_for_delivery,accepted_by_driver,on_the_way,completed,canceled"
+                ? "ALL"
+                : status.toUpperCase(),
         style: TextStyle(
           color: isSelected ? Colors.white : AppColors.primary,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,

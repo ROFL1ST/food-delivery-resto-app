@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_resto_app/data/datasources/auth_remote_datasources.dart';
 import 'package:food_delivery_resto_app/data/datasources/order_remote_datasource.dart';
+import 'package:food_delivery_resto_app/data/datasources/overview_remote_dataresources.dart';
 import 'package:food_delivery_resto_app/data/datasources/product_remote_datasources.dart';
 import 'package:food_delivery_resto_app/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/auth/bloc/logout/logout_bloc.dart';
@@ -12,6 +13,8 @@ import 'package:food_delivery_resto_app/presentation/menu/bloc/add_product/add_p
 import 'package:food_delivery_resto_app/presentation/menu/bloc/delete_product/delete_product_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_order/get_order_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_order_detail/get_order_detail_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/get_overview/get_overview_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/get_popular_menu/get_popular_menu_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_product/get_product_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/update_order_status/update_oder_status_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/update_product/update_product_bloc.dart';
@@ -41,14 +44,33 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => RegisterBloc(AuthRemoteDataSource())),
         BlocProvider(create: (context) => LoginBloc(AuthRemoteDataSource())),
         BlocProvider(create: (context) => LogoutBloc(AuthRemoteDataSource())),
-        BlocProvider(create: (context) => GetProductBloc(ProductRemoteDatasources())),
-        BlocProvider(create: (context) => AddProductBloc(ProductRemoteDatasources())),
-        BlocProvider(create: (context) => DeleteProductBloc(ProductRemoteDatasources())),
-        BlocProvider(create: (context) => UpdateProductBloc(ProductRemoteDatasources())),
-        BlocProvider(create: (context) => GetOrderBloc(OrderRemoteDatasource())),
-        BlocProvider(create: (context) => GetOrderDetailBloc(OrderRemoteDatasource())),
-        BlocProvider(create: (context) => UpdateOderStatusBloc(OrderRemoteDatasource())),
-        
+        BlocProvider(
+          create: (context) => GetProductBloc(ProductRemoteDatasources()),
+        ),
+        BlocProvider(
+          create: (context) => AddProductBloc(ProductRemoteDatasources()),
+        ),
+        BlocProvider(
+          create: (context) => DeleteProductBloc(ProductRemoteDatasources()),
+        ),
+        BlocProvider(
+          create: (context) => UpdateProductBloc(ProductRemoteDatasources()),
+        ),
+        BlocProvider(
+          create: (context) => GetOrderBloc(OrderRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => GetOrderDetailBloc(OrderRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => UpdateOderStatusBloc(OrderRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => GetOverviewBloc(OverviewRemoteDataresources()),
+        ),
+        BlocProvider(
+          create: (context) => GetPopularMenuBloc(OverviewRemoteDataresources()),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

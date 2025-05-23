@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery_resto_app/core/core.dart';
 import 'package:food_delivery_resto_app/core/extensions/build_context_ext.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/update_order_status/update_oder_status_bloc.dart';
 import 'package:food_delivery_resto_app/presentation/menu/widgets/order_detail_loading.dart';
@@ -36,6 +37,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     'processing',
     'prepared',
     'ready_for_delivery',
+    'on_the_way',
+    'accepted_by_driver',
     // 'canceled' is typically a terminal state, not part of a progression
   ];
 
@@ -184,10 +187,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 _buildDetailRow(
                                   IconsaxPlusLinear.calendar,
                                   'Order Date',
-                                  order.createdAt?.toLocal().toString().split(
-                                        ' ',
-                                      )[0] ??
-                                      '-',
+                                  order.createdAt?.toFormattedDateTime() ?? '-',
                                 ),
                                 _buildDetailRow(
                                   IconsaxPlusLinear.wallet_1,
@@ -196,13 +196,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 ),
                                 _buildDetailRow(
                                   IconsaxPlusLinear.user,
-                                  'User ID',
-                                  order.userId.toString(),
+                                  'User Name',
+                                  order.userName.toString(),
                                 ),
                                 _buildDetailRow(
                                   IconsaxPlusLinear.shop,
-                                  'Restaurant ID',
-                                  order.restaurantId.toString(),
+                                  'Restaurant Name',
+                                  order.restaurantName.toString(),
                                 ),
                                 _buildDetailRow(
                                   IconsaxPlusLinear.map_1,
@@ -306,7 +306,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     if (nextStatus == null ||
         normalizedStatus == 'ready_for_delivery' ||
         normalizedStatus == 'canceled' ||
-        normalizedStatus == 'completed') {
+        normalizedStatus == 'completed' ||
+        normalizedStatus == 'on_the_way') {
       return const SizedBox.shrink(); // No button if no next status
     }
 
@@ -473,6 +474,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           child: Text(
             status == "ready_for_delivery"
                 ? "READY FOR DELIVERY"
+                : status == "accepted_by_driver"
+                ? "ACCEPTED BY DRIVER"
+                : status == "on_the_way"
+                ? "ON THE WAY"
                 : status?.toUpperCase() ?? 'N/A',
             style: TextStyle(
               color: _getStatusColor(status),
@@ -622,6 +627,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         return Colors.teal.shade700;
       case 'ready_for_delivery':
         return Colors.purple.shade700;
+      case 'accepted_by_driver':
+        return Colors.amber.shade700;
+      case 'on_the_way':
+        return Colors.blue.shade700;
       case 'canceled':
         return Colors.red.shade700;
       default:

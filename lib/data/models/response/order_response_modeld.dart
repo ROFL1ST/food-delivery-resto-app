@@ -29,6 +29,9 @@ class OrderResponseModel {
 class Order {
   final int? id;
   final int? userId;
+  final String? restaurantName;
+  final String? userName;
+  final String? driverName;
   final int? restaurantId;
   final dynamic driverId;
   final int? totalPrice;
@@ -46,6 +49,9 @@ class Order {
     this.id,
     this.userId,
     this.restaurantId,
+    this.restaurantName,
+    this.userName,
+    this.driverName,
     this.driverId,
     this.totalPrice,
     this.shippingCost,
@@ -67,6 +73,9 @@ class Order {
     id: json["id"],
     userId: json["user_id"],
     restaurantId: json["restaurant_id"],
+    restaurantName: json["restaurant_name"],
+    userName: json["user_name"],
+    driverName: json["driver_name"],
     driverId: json["driver_id"],
     totalPrice: json["total_price"],
     shippingCost: json["shipping_cost"],
@@ -92,6 +101,9 @@ class Order {
     "user_id": userId,
     "restaurant_id": restaurantId,
     "driver_id": driverId,
+    "restaurant_name": restaurantName,
+    "user_name": userName,
+    "driver_name": driverName,
     "total_price": totalPrice,
     "shipping_cost": shippingCost,
     "total_bill": totalBill,
