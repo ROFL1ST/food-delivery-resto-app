@@ -1,15 +1,17 @@
 import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_resto_app/core/constants/variables.dart';
+import 'package:food_delivery_resto_app/data/datasources/auth_local_datasources.dart';
 import 'package:food_delivery_resto_app/data/models/response/pupular_response_model.dart';
 import 'package:food_delivery_resto_app/presentation/menu/bloc/get_overview/get_overview_bloc.dart';
-import 'package:food_delivery_resto_app/core/core.dart'; // Make sure this path is correct for currencyFormatRp extension
-import 'package:food_delivery_resto_app/data/models/response/overview_response_model.dart';
-import 'package:food_delivery_resto_app/presentation/menu/bloc/get_popular_menu/get_popular_menu_bloc.dart'; // Import your model
+import 'package:food_delivery_resto_app/core/core.dart';
+import 'package:food_delivery_resto_app/presentation/menu/bloc/get_popular_menu/get_popular_menu_bloc.dart';
+import 'package:food_delivery_resto_app/presentation/menu/widgets/home_card_loading.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,461 +21,740 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Simulasi data menu terpopuler (bisa dari API)
-  
+  String? _userName;
+  String? restaurantName;
+  String? phone;
+  String? restaurantAddress;
+  String? photo;
 
   @override
   void initState() {
     super.initState();
-    context.read<GetOverviewBloc>().add(GetOverviewEvent.getOverview());
-    context.read<GetPopularMenuBloc>().add(GetPopularMenuEvent.getPopularMenu());
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    context.read<GetOverviewBloc>().add(const GetOverviewEvent.getOverview());
+    context.read<GetPopularMenuBloc>().add(
+      const GetPopularMenuEvent.getPopularMenu(),
+    );
+    final authData = await AuthLocalDatasources().getAuthData();
+    if (authData != null) {
+      setState(() {
+        _userName = authData.data?.user?.name ?? 'User';
+        restaurantName = authData.data?.user?.restaurantName ?? 'Restaurant';
+        phone = authData.data?.user?.phone ?? '';
+        restaurantAddress = authData.data?.user?.restaurantAddress ?? '';
+        photo = authData.data?.user?.photo ?? '';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Dashboard Mitra Restoran',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w500),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black54),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Notifikasi terbaru...')),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Pengaturan akun...')),
-              );
-            },
-          ),
-        ],
-      ),
-      
-      body: Stack(
-        children: [
-          CustomRefreshIndicator(
-            onRefresh: () async {
-              log('Refresh triggered');
-              context.read<GetOverviewBloc>().add(
-                GetOverviewEvent.getOverview(),
-              );
-            },
-            builder: (context, child, controller) {
-              final double progressValue = controller.value.clamp(0.0, 1.0);
-              return Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 80,
-                    child: Opacity(
-                      opacity: controller.value.clamp(0.0, 1.0),
-                      child: Center(
-                        child: Transform.scale(
-                          scale: controller.value.clamp(0.0, 1.0),
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                              AppColors.gray4,
-                            ),
-                            value: controller.isArmed ? null : progressValue,
-                          ),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: CustomRefreshIndicator(
+          onRefresh: _fetchData,
+          builder: (context, child, controller) {
+            return Stack(
+              children: <Widget>[
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 80 * controller.value,
+                  child: Opacity(
+                    opacity: controller.value.clamp(0.0, 1.0),
+                    child: Center(
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppColors.primary,
+                          ), // Menggunakan warna primary
+                          value: controller.isArmed ? null : controller.value,
                         ),
                       ),
                     ),
                   ),
-                  Transform.translate(
-                    offset: Offset(0.0, controller.value * 80),
-                    child: child,
-                  ),
-                ],
-              );
-            },
-            child: BlocBuilder<GetOverviewBloc, GetOverviewState>(
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse:
-                      () => const Center(child: CircularProgressIndicator()),
-                  loading:
-                      () => const Center(child: CircularProgressIndicator()),
-                  error: (message) {
-                    log(message);
-                    return Center(
-                      child: Text('Error loading data: $message'),
-                    ); // More informative
-                  },
-                  loaded: (overview) {
-                    // Pastikan data tidak null sebelum digunakan
-                    final overviewData = overview.data;
-
-                    final int totalOrders = overviewData?.totalOrders ?? 0;
-                    // totalProducts tidak digunakan di UI ini, bisa dihilangkan
-                    final int totalRevenue = overviewData?.totalRevenue ?? 0;
-                    final int pendingOrders = overviewData?.pendingOrders ?? 0;
-                    final int todayDeliveries =
-                        overviewData?.todayDeliveries ?? 0;
-                    final String message = overview.message ?? 'Data fetched.';
-
-                    return CustomScrollView(
-                      // <-- CustomScrollView di sini
-                      slivers: [
-                        SliverToBoxAdapter(
-                          // <-- Wrap your Column content in SliverToBoxAdapter
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // --- Welcome Section ---
-                                const Text(
-                                  'Ringkasan Hari Ini',
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-
-                                // --- Overview Cards (Grid) ---
-                                GridView.count(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                  children: [
-                                    _buildOverviewCard(
-                                      context,
-                                      icon: Icons.assignment_outlined,
-                                      label: 'Total Pesanan',
-                                      value: '$totalOrders',
-                                      color: Colors.blue.shade50,
-                                      textColor: Colors.blue.shade700,
-                                    ),
-                                    _buildOverviewCard(
-                                      context,
-                                      icon: Icons.monetization_on_outlined,
-                                      label: 'Total Pendapatan',
-                                      value:
-                                          totalRevenue
-                                              .currencyFormatRp, // Use extension
-                                      color: Colors.green.shade50,
-                                      textColor: Colors.green.shade700,
-                                    ),
-                                    _buildOverviewCard(
-                                      context,
-                                      icon: Icons.access_time,
-                                      label: 'Pesanan Menunggu',
-                                      value: '$pendingOrders',
-                                      color: Colors.orange.shade50,
-                                      textColor: Colors.orange.shade700,
-                                    ),
-                                    _buildOverviewCard(
-                                      context,
-                                      icon: Icons.delivery_dining,
-                                      label: 'Terkirim Hari Ini',
-                                      value: '$todayDeliveries',
-                                      color: Colors.purple.shade50,
-                                      textColor: Colors.purple.shade700,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 30),
-
-                                // --- Popular Menu Items Section ---
-                                const Text(
-                                  'Menu Terpopuler',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                BlocBuilder<
-                                  GetPopularMenuBloc,
-                                  GetPopularMenuState
-                                >(
-                                  builder: (context, state) {
-                                    return state.maybeWhen(
-                                      orElse: () {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      },
-                                      loading: () {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      },
-                                      error: (message) {
-                                        log(message);
-                                        return const Center(
-                                          child: Text('Error loading data'),
-                                        );
-                                      },
-                                      loaded: (popularMenu) {
-                                        if (popularMenu.isEmpty) {
-                                          return const Center(
-                                            child: Text(
-                                              'No Popular Menu Available',
-                                            ),
-                                          );
-                                        } else {
-                                          return SizedBox(
-                                            height: 180,
-                                            child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount:
-                                                  popularMenu.length,
-                                              itemBuilder: (context, index) {
-                                                final item =
-                                                    popularMenu[index];
-                                                return _buildPopularMenuItemCard(
-                                                  context,
-                                                  item,
-                                                );
-                                              },
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: 30),
-
-                                // --- Quick Actions Section ---
-                                const Text(
-                                  'Aksi Cepat',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    _buildQuickActionButton(
-                                      context,
-                                      icon: Icons.add_circle_outline,
-                                      label: 'Buat Pesanan Manual',
-                                      onTap: () {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              'Membuka form pesanan manual...',
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    _buildQuickActionButton(
-                                      context,
-                                      icon: Icons.restaurant_menu_outlined,
-                                      label: 'Edit Menu',
-                                      onTap: () {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              'Membuka editor menu...',
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    _buildQuickActionButton(
-                                      context,
-                                      icon: Icons.person_outline,
-                                      label: 'Dukungan',
-                                      onTap: () {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              'Menghubungi dukungan...',
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 30),
-
-                                // --- Footer Info (optional) ---
-                                Center(
-                                  child: Text(
-                                    message,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
+                ),
+                Transform.translate(
+                  offset: Offset(0.0, controller.value * 80),
+                  child: child,
+                ),
+              ],
+            );
+          },
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 20.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // --- Ringkasan Hari Ini Section ---
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Selamat datang, $_userName',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.black,
                           ),
                         ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Hari ini, ${DateFormat('dd MMMM yyyy').format(DateTime.now())}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.gray3,
+                          ), // Menggunakan gray3
+                        ),
                       ],
+                    ),
+                    // photo profile
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: AppColors.gray4,
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            '${Variables.baseUrl}/uploads/profile/${photo ?? ''}',
+                        placeholder:
+                            (context, url) => Icon(
+                              IconsaxPlusBold.user,
+                              size: 25,
+                              color: AppColors.gray3, // Menggunakan gray3
+                            ),
+                        errorWidget: (context, url, error) {
+                          log('Error loading image: $error');
+                          return Icon(
+                            IconsaxPlusBold.user,
+                            size: 25,
+                            color: AppColors.gray3, // Menggunakan gray3
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: height * 0.02),
+                BlocBuilder<GetOverviewBloc, GetOverviewState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      loading:
+                          () => HomeCardLoading(
+                            context,
+                            width: width,
+                            height: height,
+                          ),
+                      error:
+                          (message) => Center(
+                            child: Text(
+                              'Error: $message',
+                              style: const TextStyle(color: AppColors.red),
+                            ),
+                          ), // Menggunakan AppColors.red
+                      loaded: (overview) {
+                        final overviewData = overview.data;
+                        final int totalOrders = overviewData?.totalOrders ?? 0;
+                        final int totalRevenue =
+                            overviewData?.totalRevenue ?? 0;
+                        final int pendingOrders =
+                            overviewData?.pendingOrders ?? 0;
+                        final int todayDeliveries =
+                            overviewData?.todayDeliveries ?? 0;
+                        final int transactionPercentage =
+                            overviewData?.transactionPercentage ?? 0;
+                        final int pendingPercentage =
+                            overviewData?.pendingPercentage ?? 0;
+                        final int todayDeliveriesPercentage =
+                            overviewData?.todayDeliveriesPercentage ?? 0;
+                        return Card(
+                          margin: EdgeInsets.zero,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            side: const BorderSide(
+                              color: AppColors.stroke,
+                              width: 1,
+                            ), // Menggunakan stroke dari AppColors
+                          ),
+                          color: AppColors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Pendapatan Section
+                              Card(
+                                elevation: 0,
+
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  side: const BorderSide(
+                                    color: AppColors.stroke,
+                                    width: 1,
+                                  ), // Menggunakan stroke dari AppColors
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                restaurantName ??
+                                                    'Nama Restoran',
+                                                style: TextStyle(
+                                                  color: AppColors.black,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    IconsaxPlusBold.location,
+                                                    color: AppColors.red,
+                                                    size: 16,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    restaurantAddress ??
+                                                        'Alamat Restoran',
+                                                    style: const TextStyle(
+                                                      color: AppColors.gray3,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: height * 0.02),
+                                      // Transaksi hari ini dan Penjualan kotor hari ini
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'Transaksi hari ini',
+                                                  style: TextStyle(
+                                                    color: AppColors.gray3,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height * 0.01),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      '$totalOrders',
+                                                      style: const TextStyle(
+                                                        color: AppColors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Icon(
+                                                      transactionPercentage >= 0
+                                                          ? Icons
+                                                              .arrow_upward_sharp
+                                                          : Icons
+                                                              .arrow_downward_sharp,
+                                                      color:
+                                                          transactionPercentage >=
+                                                                  0
+                                                              ? AppColors.green
+                                                              : AppColors.red,
+                                                      size: 16,
+                                                    ),
+
+                                                    Text(
+                                                      '${transactionPercentage.abs()}%', // DUMMY
+                                                      style: TextStyle(
+                                                        color: AppColors.green,
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'Penjualan kotor hari ini',
+                                                  style: TextStyle(
+                                                    color: AppColors.gray3,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height * 0.01),
+                                                Text(
+                                                  totalRevenue.currencyFormatRp,
+                                                  style: const TextStyle(
+                                                    color: AppColors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: height * 0.01),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 20.0,
+                                  right: 20.0,
+                                  bottom: 20.0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            'Pesanan tertunda hari ini',
+                                            style: TextStyle(
+                                              color: AppColors.gray3,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          SizedBox(height: height * 0.01),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '$pendingOrders',
+                                                style: const TextStyle(
+                                                  color: AppColors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Icon(
+                                                pendingPercentage >= 0
+                                                    ? Icons.arrow_upward_sharp
+                                                    : Icons
+                                                        .arrow_downward_sharp,
+                                                color:
+                                                    pendingPercentage >= 0
+                                                        ? AppColors.green
+                                                        : AppColors.red,
+                                                size: 16,
+                                              ),
+
+                                              Text(
+                                                '${pendingPercentage.abs()}%', // DUMMY
+                                                style: TextStyle(
+                                                  color: AppColors.green,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Pengiriman hari ini',
+                                            style: TextStyle(
+                                              color: AppColors.gray3,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          SizedBox(height: height * 0.01),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '$todayDeliveries',
+                                                style: const TextStyle(
+                                                  color: AppColors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Icon(
+                                                todayDeliveriesPercentage >= 0
+                                                    ? Icons.arrow_upward_sharp
+                                                    : Icons
+                                                        .arrow_downward_sharp,
+                                                color:
+                                                    todayDeliveriesPercentage >=
+                                                            0
+                                                        ? AppColors.green
+                                                        : AppColors.red,
+                                                size: 16,
+                                              ),
+
+                                              Text(
+                                                '${todayDeliveriesPercentage.abs()}%', // DUMMY
+                                                style: TextStyle(
+                                                  color: AppColors.green,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.05,
+                                    ), // Menggunakan width dari MediaQuery
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      orElse:
+                          () => HomeCardLoading(
+                            context,
+                            width: width,
+                            height: height,
+                          ),
                     );
                   },
-                );
-              },
+                ),
+                SizedBox(height: height * 0.02),
+                const Text(
+                  'Aksi Cepat',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: height * 0.01),
+                quick_menu(context),
+                SizedBox(height: height * 0.03),
+                // --- Menu Terpopuler Section ---
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Menu Terpopuler',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Melihat semua menu...'),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Lihat Semua',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: height * 0.02),
+                BlocBuilder<GetPopularMenuBloc, GetPopularMenuState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      loading:
+                          () => const Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.primary,
+                              ),
+                            ),
+                          ),
+                      error:
+                          (message) => Center(
+                            child: Text(
+                              'Error memuat menu: $message',
+                              style: const TextStyle(color: AppColors.red),
+                            ),
+                          ),
+                      loaded: (popularMenu) {
+                        if (popularMenu.isEmpty) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 30.0),
+                              child: Text(
+                                'Belum ada menu terpopuler saat ini.',
+                                style: TextStyle(
+                                  color: AppColors.gray3,
+                                  fontSize: 14,
+                                ), // Menggunakan gray3
+                              ),
+                            ),
+                          );
+                        } else {
+                          return SizedBox(
+                            height: 220,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: popularMenu.length,
+                              itemBuilder: (context, index) {
+                                final item = popularMenu[index];
+                                return _buildPopularMenuItemCard(context, item);
+                              },
+                            ),
+                          );
+                        }
+                      },
+                      orElse: () => const SizedBox.shrink(),
+                    );
+                  },
+                ),
+                SizedBox(height: height * 0.03),
+                // --- Aksi Cepat Section ---
+                SizedBox(height: height * 0.03),
+                // --- Footer Info ---
+                const Center(
+                  child: Text(
+                    'Data diperbarui secara real-time.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.gray3, // Menggunakan gray3
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildOverviewCard(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-    required Color textColor,
-  }) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: Colors.grey.shade200, width: 1),
-      ),
-      color: color,
-      child: InkWell(
+  Widget quick_menu(BuildContext context) {
+    final List<Widget> quickActionButtons = [
+      _buildQuickActionButton(
+        context,
+        icon: IconsaxPlusBold.shopping_cart,
+        label: 'Pesanan',
         onTap: () {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Anda menekan $label')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Membuka halaman buat pesanan...')),
+          );
         },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      ),
+      _buildQuickActionButton(
+        context,
+        icon: IconsaxPlusBold.menu,
+        label: 'Menu',
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Membuka halaman kelola menu...')),
+          );
+        },
+      ),
+      _buildQuickActionButton(
+        context,
+        icon: IconsaxPlusBold.message_question,
+        label: 'Bantuan',
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Membuka pusat bantuan...')),
+          );
+        },
+      ),
+      _buildQuickActionButton(
+        context,
+        icon: IconsaxPlusBold.info_circle,
+        label: 'Tentang',
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Membuka halaman Tentang...')),
+          );
+        },
+      ),
+      _buildQuickActionButton(
+        context,
+        icon: IconsaxPlusBold.setting_2, // Contoh tombol kelima
+        label: 'Pengaturan',
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Membuka halaman Pengaturan...')),
+          );
+        },
+      ),
+      _buildQuickActionButton(
+        context,
+        icon: IconsaxPlusBold.user, // Contoh tombol keenam
+        label: 'Profil',
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Membuka halaman Profil...')),
+          );
+        },
+      ),
+    ];
+
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Expanded(
+        child: Wrap(
+          alignment: WrapAlignment.start, // Meratakan item secara horizontal
+          spacing: 8.0, // Jarak horizontal antar item
+          runSpacing: 16.0, // Jarak vertikal antar baris
+          children:
+              quickActionButtons
+                  .map(
+                    (button) => SizedBox(
+                      width: MediaQuery.of(context).size.width / 4 - 14,
+                      child: button,
+                    ),
+                  )
+                  .toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPopularMenuItemCard(BuildContext context, Datum item) {
+    return Container(
+      width: 170,
+      margin: const EdgeInsets.only(right: 16),
+      decoration: BoxDecoration(
+        color: AppColors.white, // Latar belakang kartu putih
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.stroke,
+          width: 1,
+        ), // Menggunakan stroke
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Melihat detail menu: ${item.name}')),
+            );
+          },
+          borderRadius: BorderRadius.circular(16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, size: 32, color: textColor),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[700],
-                  fontWeight: FontWeight.normal,
+              ClipRRect(
+                borderRadius: const BorderRadius.all(
+                   Radius.circular(16),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      '${Variables.baseUrl}/uploads/products/${item.image}',
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder:
+                      (context, url) => Container(
+                        height: 120,
+                        color:
+                            AppColors.gray5, // Menggunakan gray5 (lebih terang)
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                  errorWidget: (context, url, error) {
+                    log('Error loading image: $error');
+                    return Container(
+                      height: 120,
+                      color: AppColors.gray2, // Menggunakan gray2
+                      child: const Icon(
+                        Icons.image_not_supported_outlined,
+                        color: AppColors.gray3, // Menggunakan gray3
+                        size: 40,
+                      ),
+                    );
+                  },
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name ?? "Nama Menu",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: AppColors.black,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${item.sales ?? "0"} terjual',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppColors.gray3,
+                      ), // Menggunakan gray3
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPopularMenuItemCard(
-    BuildContext context,
-    Datum item,
-  ) {
-    return Container(
-      width: 160,
-      margin: const EdgeInsets.only(right: 12),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: Colors.grey.shade200, width: 1),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(9),
-              ),
-              child: CachedNetworkImage(
-                imageUrl: '${Variables.baseUrl}/uploads/products/${item.image}',
-                height: 100,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder:
-                    (context, url) => Container(
-                      height: 120,
-                      color: AppColors.gray1,
-                      child: const Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    ),
-                errorWidget: (context, url, error) {
-                  print('Error loading image: $error');
-                  return Container(
-                    height: 120,
-                    color: AppColors.gray1,
-                    child: const Icon(
-                      Icons.broken_image,
-                      color: AppColors.gray2,
-                    ),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name ?? "",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    item.sales ?? "0x terjual",
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -490,21 +771,29 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade200, width: 1),
+              color: AppColors.white, // Latar belakang putih
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.stroke,
+                width: 1,
+              ), // Menggunakan stroke
             ),
-            child: Icon(icon, size: 28, color: Colors.black54),
+            child: Icon(
+              icon,
+              size: 30,
+              color: AppColors.primary,
+            ), // Menggunakan primary
           ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: 80,
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, color: Colors.black87),
+          const SizedBox(height: 10),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.black,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

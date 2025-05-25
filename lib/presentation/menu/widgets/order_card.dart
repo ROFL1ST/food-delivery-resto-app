@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery_resto_app/core/components/components.dart';
 import 'package:food_delivery_resto_app/core/constants/colors.dart';
+import 'package:food_delivery_resto_app/core/core.dart';
 import 'package:food_delivery_resto_app/core/extensions/build_context_ext.dart';
 import 'package:food_delivery_resto_app/data/models/response/order_response_modeld.dart';
 import 'package:food_delivery_resto_app/presentation/menu/pages/order_detail_page.dart';
 
 class OrderCard extends StatefulWidget {
   final Order order; // Pastikan Anda memiliki model Order
-  const OrderCard({super.key, required this.order});
+  OrderCard({super.key, required this.order});
 
   @override
   State<OrderCard> createState() => _OrderCardState();
@@ -15,6 +17,8 @@ class OrderCard extends StatefulWidget {
 class _OrderCardState extends State<OrderCard> {
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Card(
       // Kembali menggunakan Card
       elevation: 1, // Sedikit bayangan
@@ -28,7 +32,7 @@ class _OrderCardState extends State<OrderCard> {
           context.push(OrderDetailPage(orderId: widget.order.id));
         },
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -37,7 +41,7 @@ class _OrderCardState extends State<OrderCard> {
                 children: [
                   Text(
                     'Order ID: #${widget.order.id ?? '-'}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,
                       color: AppColors.black, // Warna teks lebih netral
@@ -45,10 +49,7 @@ class _OrderCardState extends State<OrderCard> {
                   ),
                   // Status kapsul yang lebih jelas
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       color: _getStatusColor(
                         widget.order.status,
@@ -72,13 +73,10 @@ class _OrderCardState extends State<OrderCard> {
                   ),
                 ],
               ),
-              const Divider(
-                height: 20,
-                thickness: 0.8,
-                color: Colors.grey,
-              ), // Garis pemisah yang lebih tipis
-              // Daftar Item Pesanan
-              const Text(
+              SizedBox(height: height * 0.015),
+              DottedDivider(color: AppColors.gray4, height: 1.2),
+              SizedBox(height: height * 0.01),
+              Text(
                 'Items:',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
@@ -86,36 +84,30 @@ class _OrderCardState extends State<OrderCard> {
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: height * 0.01),
               ...?widget.order.orderItems?.map((item) {
                 return Padding(
-                  padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
+                  padding: EdgeInsets.only(left: 8.0, bottom: 4.0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '${item.quantity ?? 1}x',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: height * 0.01),
                       Expanded(
                         child: Text(
-                          '${item.product?.name ?? 'Unknown Product'}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.black54,
-                          ),
+                          item.product?.name ?? 'Unknown Product',
+                          style: TextStyle(fontSize: 14, color: Colors.black54),
                         ),
                       ),
                       Text(
-                        'Rp ${item.price ?? 0}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                        ),
+                        item.price!.currencyFormatRp,
+                        style: TextStyle(fontSize: 14, color: Colors.black54),
                       ),
                     ],
                   ),
@@ -123,7 +115,7 @@ class _OrderCardState extends State<OrderCard> {
               }).toList(),
               if (widget.order.orderItems == null ||
                   widget.order.orderItems!.isEmpty)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(left: 8.0),
                   child: Text(
                     'Tidak ada item dalam pesanan ini.',
@@ -134,31 +126,34 @@ class _OrderCardState extends State<OrderCard> {
                   ),
                 ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: height * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Biaya Pengiriman:',
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   Text(
-                    'Rp ${widget.order.shippingCost ?? 0}',
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    widget.order.shippingCost!.currencyFormatRp,
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Total Pembayaran:',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                   ),
                   Text(
-                    'Rp ${widget.order.totalBill ?? 0}', // Format harga dengan mata uang
-                    style: const TextStyle(
+                    widget
+                        .order
+                        .totalBill!
+                        .currencyFormatRp, // Format harga dengan mata uang
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,
                       color: AppColors.primary, // Tetap gunakan warna primer
@@ -166,12 +161,12 @@ class _OrderCardState extends State<OrderCard> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Align(
                 alignment: Alignment.bottomRight,
                 child: Text(
-                  'Tanggal: ${widget.order.createdAt?.toLocal().toString().split(' ')[0] ?? '-'}',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  'Tanggal: ${widget.order.createdAt?.toFormattedDateTime() ?? '-'}',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ),
             ],

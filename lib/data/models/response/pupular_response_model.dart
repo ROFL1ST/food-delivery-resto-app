@@ -32,11 +32,13 @@ class Datum {
     final String? name;
     final String? image;
     final String? sales;
+    final int? price;
 
     Datum({
         this.name,
         this.image,
         this.sales,
+        this.price,
     });
 
     factory Datum.fromRawJson(String str) => Datum.fromJson(json.decode(str));
@@ -47,11 +49,13 @@ class Datum {
         name: json["name"],
         image: json["image"],
         sales: json["sales"],
+        price: json["price"] == null ? 0 : int.parse(json["price"].toString()),
     );
 
     Map<String, dynamic> toJson() => {
         "name": name,
         "image": image,
         "sales": sales,
+        "price": price,
     };
 }

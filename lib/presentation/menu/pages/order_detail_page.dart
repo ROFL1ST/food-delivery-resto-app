@@ -14,7 +14,7 @@ import 'package:food_delivery_resto_app/presentation/menu/bloc/get_order_detail/
 
 class OrderDetailPage extends StatefulWidget {
   final int? orderId;
-  const OrderDetailPage({super.key, required this.orderId});
+  OrderDetailPage({super.key, required this.orderId});
 
   @override
   State<OrderDetailPage> createState() => _OrderDetailPageState();
@@ -32,7 +32,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     }
   }
 
-  static const List<String> _statusProgression = [
+  static List<String> _statusProgression = [
     'pending',
     'processing',
     'prepared',
@@ -44,15 +44,18 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(IconsaxPlusLinear.arrow_left_1, color: Colors.black),
+          icon: Icon(IconsaxPlusLinear.arrow_left_1, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
+        title: Text(
           "Order Detail",
           style: TextStyle(
             color: Colors.black,
@@ -101,7 +104,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       scale: controller.value.clamp(0.0, 1.0),
                       child: CircularProgressIndicator(
                         strokeWidth: 2.5,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
+                        valueColor: AlwaysStoppedAnimation<Color>(
                           AppColors.gray4,
                         ),
                         value: controller.isArmed ? null : progressValue,
@@ -119,33 +122,26 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               builder: (context, state) {
                 return state.maybeWhen(
                   orElse:
-                      () => const SliverFillRemaining(
-                        child: OrderDetailLoading(),
-                      ),
+                      () => SliverFillRemaining(child: OrderDetailLoading()),
                   loading:
-                      () => const SliverFillRemaining(
-                        child: OrderDetailLoading(),
-                      ),
+                      () => SliverFillRemaining(child: OrderDetailLoading()),
 
                   error:
                       (message) => SliverFillRemaining(
                         child: Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(24.0),
+                            padding: EdgeInsets.all(24.0),
                             child: Text(
                               'Failed to load order details: $message\nPlease try again.',
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 16,
-                              ),
+                              style: TextStyle(color: Colors.red, fontSize: 16),
                             ),
                           ),
                         ),
                       ),
                   loaded: (order) {
                     if (order == null) {
-                      return const SliverFillRemaining(
+                      return SliverFillRemaining(
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,20 +166,22 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     }
                     return SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // --- Bagian Informasi Ringkasan Pesanan ---
                             _buildSectionTitle('Order Summary'),
-                            const SizedBox(height: 12),
+                            SizedBox(height: height * 0.01),
                             _buildInfoCard(
                               children: [
                                 _buildSummaryHeader(order.id, order.status),
-                                const Divider(
-                                  height: 24,
-                                  thickness: 0.8,
-                                ), // Pemisah halus
+                                SizedBox(height: height * 0.01),
+                                 DottedDivider(
+                                  color: AppColors.gray4,
+                                  height: 1.2,
+                                 ),
+                                SizedBox(height: height * 0.01),
                                 _buildDetailRow(
                                   IconsaxPlusLinear.calendar,
                                   'Order Date',
@@ -213,24 +211,31 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               ],
                             ),
 
-                            const SizedBox(height: 28), // Spasi antar bagian
                             // --- Bagian Item Pesanan ---
-                            _buildSectionTitle('Items in Order'),
-                            const SizedBox(height: 12),
+                            SizedBox(
+                              height: height * 0.01,
+                            ), // Spasi antar bagian
                             _buildInfoCard(
                               children: [
+                                _buildSectionTitle('Items in Order'),
+                                DottedDivider(
+                                  color: AppColors.gray4,
+
+                                  height: 1.2,
+                                ),
+                                SizedBox(height: height * 0.01),
                                 if (order.orderItems != null &&
                                     order.orderItems!.isNotEmpty)
                                   ...order.orderItems!.map((item) {
                                     return Padding(
-                                      padding: const EdgeInsets.symmetric(
+                                      padding: EdgeInsets.symmetric(
                                         vertical: 8.0,
                                       ), // Spasi antar item
                                       child: _buildOrderItemRow(item),
                                     );
                                   }).toList()
                                 else
-                                  const Center(
+                                  Center(
                                     child: Padding(
                                       padding: EdgeInsets.all(12.0),
                                       child: Text(
@@ -245,22 +250,28 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               ],
                             ),
 
-                            const SizedBox(height: 28), // Spasi antar bagian
+                            SizedBox(
+                              height: height * 0.02,
+                            ), // Spasi antar bagian
                             // --- Bagian Ringkasan Pembayaran ---
-                            _buildSectionTitle('Payment Details'),
-                            const SizedBox(height: 12),
                             _buildInfoCard(
                               children: [
+                                _buildSectionTitle('Payment Details'),
+                                DottedDivider(
+                                  color: AppColors.gray4,
+                                  height: 1.2,
+                                ),
+                                SizedBox(height: height * 0.01),
                                 _buildPriceRow(
                                   'Subtotal',
                                   order.totalPrice ?? 0,
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10),
                                 _buildPriceRow(
                                   'Shipping Cost',
                                   order.shippingCost ?? 0,
                                 ),
-                                const Divider(
+                                Divider(
                                   height: 24,
                                   thickness: 1.2,
                                 ), // Pemisah lebih tebal
@@ -271,11 +282,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: 20),
 
                             // --- Status Update Buttons ---
                             _buildNextStatusButton(order.status),
-                            const SizedBox(height: 20),
+                            SizedBox(height: 20),
                           ],
                         ),
                       ),
@@ -308,7 +319,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         normalizedStatus == 'canceled' ||
         normalizedStatus == 'completed' ||
         normalizedStatus == 'on_the_way') {
-      return const SizedBox.shrink(); // No button if no next status
+      return SizedBox.shrink(); // No button if no next status
     }
 
     String buttonText;
@@ -339,7 +350,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       listener: (context, state) {
         state.maybeWhen(
           loading: () {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           },
           orElse: () {},
           success: () {
@@ -373,14 +384,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 14,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 ),
                 child: Text(
                   buttonText,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
@@ -400,14 +408,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 14,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 ),
                 child: Text(
                   "Loading...",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
@@ -422,10 +427,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0), // Added padding
+      padding: EdgeInsets.only(bottom: 8.0), // Added padding
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: AppColors.black, // Atau Colors.black87
@@ -442,9 +447,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       ),
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(
-          20.0,
-        ), // Padding yang konsisten di dalam kartu
+        padding: EdgeInsets.all(20.0), // Padding yang konsisten di dalam kartu
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: children,
@@ -459,14 +462,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       children: [
         Text(
           'Order ID: #${orderId ?? '-'}',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
             color: AppColors.black,
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
             color: _getStatusColor(status).withOpacity(0.15),
             borderRadius: BorderRadius.circular(20),
@@ -497,7 +500,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     bool isAddress = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
         vertical: 4.0,
       ), // Spasi vertikal antar baris
       child: Row(
@@ -508,15 +511,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             size: 18,
             color: AppColors.primary.withOpacity(0.8),
           ), // Ikon lebih kecil & sedikit transparan
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: const TextStyle(fontSize: 13, color: Colors.grey),
-                ),
+                Text(label, style: TextStyle(fontSize: 13, color: Colors.grey)),
                 Text(
                   value,
                   style: TextStyle(
@@ -546,16 +546,16 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           children: [
             Text(
               '${item.quantity ?? 1}x',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     item.product?.name ?? 'Unknown Product',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                       color: Colors.black87,
@@ -563,14 +563,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   ),
                   Text(
                     'Rp ${item.price ?? 0} / item',
-                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
                   ),
                 ],
               ),
             ),
             Text(
               'Rp ${(item.quantity ?? 0) * (item.price ?? 0)}',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
           ],
         ),
@@ -579,7 +579,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           loaded: (order) => order?.orderItems?.last != item,
           orElse: () => false,
         ))
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: Divider(
               thickness: 0.5,
